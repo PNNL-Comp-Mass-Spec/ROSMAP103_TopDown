@@ -19,8 +19,10 @@ library(PNNL.DMS.utils)
 
 si <- read_excel("./source_data/pr3c00353_si_002.xlsx", sheet = 2)
 
+(load("./output_data/shotgun_topdown_int_20240730_modann_cnt.RData"))
+mi <- m
 
-load("./output_data/shotgun_topdown_int_20240730_beforecorrections_mid1a.RData")
+(load("./output_data/shotgun_topdown_int_20240730_beforecorrections_mid1a.RData"))
 
 m0 <- m
 #for raw intensity needs to be division not subtraction 
@@ -35,14 +37,23 @@ if(!file.exists("./output_data/rollup_forpatrie.RData")){
 }
 
 
+# let's filter by count to robustly observed species
+mi <- mi[fData(mi)$count > 20,]
+m <- m[featureNames(m) %in% featureNames(mi),]
+
+
+
+
+
+
 selected_features <- m %>%
    exprs() %>%
    as.data.frame() %>%
    rownames_to_column("feature_name") %>%
-   pivot_longer(cols = -feature_name, names_to = "sample_name", values_to = "spectral_counts") %>%
+   pivot_longer(cols = -feature_name, names_to = "sample_name", values_to = "intensity") %>%
    inner_join(pData(m)) %>%
-   select(feature_name, sample_name, spectral_counts, batch) %>%
-   filter(spectral_counts > 0) %>%
+   select(feature_name, sample_name, intensity, batch) %>%
+   filter(intensity > 0) %>%
    group_by(feature_name, batch) %>%
    tally() %>%
    filter(n >= 2) %>%
@@ -69,15 +80,20 @@ extract_mods <- function(pform){
 }
 extract_mods <- Vectorize(extract_mods)
 
+
+
+
+# what is the meaning of this pipe? and why count (former spectralCount) filter?
+# retaining only unmodified APP species plus some housekeeping recalculations
 appdf <- fData(m0) %>%
    filter(Gene == "APP") %>%
-   filter(count > 20) %>%
+   # filter(count > 20) %>%
    mutate(firstAA = firstAA - 671,
           lastAA = lastAA - 671) %>%
    mutate(mod_str = extract_mods(Proteoform)) %>%
    as_tibble() %>%
    #dplyr::select(-mods) %>%
-   filter(mod_str =="") %>%
+   filter(mod_str == "") %>%
    mutate(aa = paste(firstAA, lastAA)) %>%
    select(proteoform_id, aa, firstAA, lastAA) %>%
    distinct() %>%
@@ -109,14 +125,14 @@ merger <- merge(summary, appdf, by ="aa") %>%
           sd = log10(sd),
           logmed = log10(.))
 
-insolcor <- cor(((merger %>% 
-                    filter(Treatment == "Insol"))$sum), ((merger %>% 
-                                                           filter(Treatment == "Insol"))$logmed))
+insolcor <- cor(((merger %>% filter(Treatment == "Insol"))$sum), 
+                ((merger %>% filter(Treatment == "Insol"))$logmed),
+                use = "pairwise.complete.obs")
 
 
-solcor <- cor(((merger %>% 
-                     filter(Treatment == "Sol"))$sum), ((merger %>% 
-                                                              filter(Treatment == "Sol"))$logmed))
+solcor <- cor(((merger %>% filter(Treatment == "Sol"))$sum), 
+              ((merger %>% filter(Treatment == "Sol"))$logmed),
+              use = "pairwise.complete.obs")
 
 temp <- merger %>%
    mutate(insolcor =insolcor,
@@ -167,12 +183,12 @@ ggscatter(plottindf, x="sum",
    #        fill = guide_legend(title = "Fractions *Kandi et al.")) 
    # 
    
-   ggsave(plot = last_plot(), 
-          path = paste(getwd(), "/figures_tables", sep=""),
-          filename = "FigS2_intensity_correlation_solvinsol.png", 
-          width = 6,
-          height = 13,
-          units = c("in"))
+ggsave(plot = last_plot(), 
+       path = paste(getwd(), "/figures_tables", sep=""),
+       filename = "FigS2_intensity_correlation_solvinsol.png", 
+       width = 6,
+       height = 13,
+       units = c("in"))
 
 
    
