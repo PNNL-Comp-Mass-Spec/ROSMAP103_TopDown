@@ -11,7 +11,7 @@
 
 ## The indended use:
 
-1. `run_processing_pipeline.R` takes the results of (TopPIC)[https://www.toppic.org/software/toppic/index.html] MS/MS search and feature finding, FASTA file and number of additional data files and produces two `MSnSet` objects with proteoforms quantified using 1) MS1 intensities and 2) spectral counts.
+1. `run_processing_pipeline.R` takes the results of [TopPIC](https://www.toppic.org/software/toppic/index.html) MS/MS search and feature finding, FASTA file and number of additional data files and produces two `MSnSet` objects with proteoforms quantified using 1) MS1 intensities and 2) spectral counts.
 
 2. `run_to_make_figures_and_tables.R` recreates most of the figures (both in the main text and the supplementary) and two supplementary tables with the quantitative data on the proteoforms.
 
