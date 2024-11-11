@@ -114,7 +114,6 @@ x_expr <- x %>%
 x_feat <- x %>%
   group_by(Gene, pcGroup, CV, fraction, feature_name) %>%
    dplyr::summarize(median_intensity = median(Intensity),
-            count = n(),
             .groups = "keep") %>%
   ungroup() %>%
   left_join(x_meta, by=c("Gene","pcGroup")) %>%
