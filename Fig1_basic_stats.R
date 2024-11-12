@@ -217,6 +217,7 @@ mod_vec_df <- data.frame(mod_name = names(mod_vec), mod_count = mod_vec) %>%
                                mod_name == "Plus2Oxy" ~ "Dioxidation",
                                mod_name == "Glu->pyro-Glu" ~ "pyro-Glu",
                                mod_name == "Methyl" ~ "Methylation",
+                               mod_name == "CTrmAmid" ~ "C-Term Amid",
                                TRUE ~ mod_name))%>%
    mutate(mod_count2 = mod_count/11507 *100) %>%
    mutate(mod_name = ordered(mod_name, levels=rev(unique(mod_name)))) 
@@ -244,6 +245,6 @@ panela + panelb + panelc + paneld
 plot_layout(widths = c(0.35, 0.4, 1),
             guides = "collect")
 
-ggsave(filename = "./figures_tables/Fig1_basic_stats.png", width = 16, height = 14)
+ggsave(filename = "./figures_tables/Fig1_basic_stats.pdf", width = 16, height = 16)
 
 
