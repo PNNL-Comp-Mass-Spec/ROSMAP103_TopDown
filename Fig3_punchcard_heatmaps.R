@@ -1,4 +1,6 @@
 
+# scale factor for tuning the size of the heatmaps
+
 
 #original scripts are 6a/6b 
 library(tidyverse)
@@ -125,6 +127,7 @@ int <- ggplot(data = df,
                         name = "Z-score") +
    guides(color = FALSE, size = FALSE) +
    geom_point( aes( y = proteoform, x = variable, size=ifelse(is_sig, "dot", "no_dot"))) +
+   scale_size_manual(values=c(dot=1.5, no_dot=NA), guide="none") +
    theme_classic() +
    scale_y_discrete(limits=rev) +
    scale_x_discrete(position="top",labels=c(
@@ -150,19 +153,7 @@ int <- ggplot(data = df,
 int
 
 
-ggsave(plot = int,
-       filename = "./figures_tables/Fig3_intensity_punchcard.png",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7*(39/44))
 
-ggsave(plot = int,
-       filename = "./figures_tables/Fig3_intensity_punchcard.pdf",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7*(39/44))
 
 
 
@@ -279,6 +270,7 @@ sc <- ggplot(data = df3,
                         name = "Z-score") +
    guides(color = FALSE, size = FALSE)+
    geom_point( aes( y = proteoform, x = variable, size=ifelse(is_sig, "dot", "no_dot")))+
+   scale_size_manual(values=c(dot=1.5, no_dot=NA), guide="none") +
    theme_classic()+
    scale_y_discrete(limits=rev)+
    scale_x_discrete(position="top",labels=c(
@@ -308,19 +300,7 @@ sc <- ggplot(data = df3,
 
 sc
 
-ggsave(plot = sc ,
-       filename = "./figures_tables/Fig3_spectral_counts_punchcard.png",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7)
 
-ggsave(plot = sc ,
-       filename = "./figures_tables/Fig3_spectral_counts_punchcard.pdf",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7)
 
 
 sc2 <- ggplot(data = df3, 
@@ -334,6 +314,7 @@ sc2 <- ggplot(data = df3,
                         name = "Z-score") +
    guides(color = FALSE, size = FALSE)+
    geom_point( aes( y = proteoform, x = variable, size=ifelse(is_sig, "dot", "no_dot")))+
+   scale_size_manual(values=c(dot=1.5, no_dot=NA), guide="none") +
    theme_classic()+
    scale_y_discrete(limits=rev)+
    scale_x_discrete(position="top",labels=c(
@@ -363,19 +344,6 @@ sc2 <- ggplot(data = df3,
 
 sc2
 
-ggsave(plot = sc2 ,
-       filename = "./figures_tables/Fig3_spectral_counts_punchcard_43.png",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7*(43/44))
-
-ggsave(plot = sc2 ,
-       filename = "./figures_tables/Fig3_spectral_counts_punchcard_43.pdf",
-       units = c("px"),
-       bg = 'white',
-       dpi = 300,
-       scale = 1.7*(43/44))
 
 
 length(unique(df3$proteoform))
@@ -396,6 +364,80 @@ plot <- int + sc +
    plot_annotation(tag_levels = "a") &
    theme(plot.tag = element_text(size=24,face = 'bold'))
 plot
+
+
+
+
+
+
+
+
+
+# saving pieces for assembing in affinity designer
+SCALE = 0.75
+
+ggsave(plot = int,
+       filename = "./figures_tables/Fig3_intensity_punchcard.png",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4388, # 4951 * 39/44,
+       height = 2897 * 39/44) # 2567) # (39/44)
+
+ggsave(plot = int,
+       filename = "./figures_tables/Fig3_intensity_punchcard.pdf",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4388, # 4951 * 39/44,
+       height = 2897 * 39/44) # 2567) # (39/44)
+
+#------------------------------------
+
+ggsave(plot = sc,
+       filename = "./figures_tables/Fig3_spectral_counts_punchcard.png",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4951,
+       height = 2897) # 44/44
+
+ggsave(plot = sc,
+       filename = "./figures_tables/Fig3_spectral_counts_punchcard.pdf",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4951,
+       height = 2897) # 44/44
+
+
+#------------------------------------
+
+# the last panel is shorter (43 vs 44 rows), thus plotting in different scale
+ggsave(plot = sc2 ,
+       filename = "./figures_tables/Fig3_spectral_counts_punchcard_43.png",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4951, # * 43/44,
+       height = 2897 * 43/44) # 43/44
+
+ggsave(plot = sc2 ,
+       filename = "./figures_tables/Fig3_spectral_counts_punchcard_43.pdf",
+       units = c("px"),
+       bg = 'white',
+       dpi = 300,
+       scale = SCALE,
+       width = 4951, # * 43/44,
+       height = 2897 * 43/44) # 43/44
+
+
+
 
 
 

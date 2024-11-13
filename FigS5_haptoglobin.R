@@ -38,7 +38,8 @@ hpplot <- w_prot %>%
    labs(x="Retention time (sec)", y="Mass (Da)", title= "Haptoglobin (HP)", color="Allele")+
    theme_bw(base_size = 16)+
    theme(text=element_text(family="Helvetica"),
-         panel.border = element_blank())
+         panel.border = element_blank(),
+         legend.text = element_text(face = "italic"))
 hpplot
 
 ggsave(plot = hpplot, 
