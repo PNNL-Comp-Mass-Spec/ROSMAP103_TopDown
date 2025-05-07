@@ -33,7 +33,7 @@ featureNames(m) %>% sub("([^_]*)_\\d+","\\1",.) %>% unique() %>% length()
 # alternative filter. Better suited is the data is non-batch-corrected and the 
 # batch is used as a covariate.
 # 
-# subset to at least 2 batches with 2 samples
+# subset to at least 2 batches with 3 samples
 selected_features <- m %>%
    exprs() %>%
    as.data.frame() %>%
