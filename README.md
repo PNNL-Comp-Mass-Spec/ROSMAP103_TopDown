@@ -16,3 +16,6 @@
 2. `run_to_make_figures_and_tables.R` recreates most of the figures (both in the main text and the supplementary) and two supplementary tables with the quantitative data on the proteoforms.
 
 
+# Archive Notice
+This repository has been archived and is no longer maintained.
+The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.
