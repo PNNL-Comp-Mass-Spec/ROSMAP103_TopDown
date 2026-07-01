@@ -6,7 +6,7 @@
 
 * The clinical and pathological metadata is protected by Data Use Agreement (DUA) of Rush Alzheimer's Disease Center ([RADC](https://www.radc.rush.edu/))
 
-* The current repository provides the code for the trasparency of the data analysis.
+* The current repository provides the code for the transparency of the data analysis.
 
 
 ## The intended use:
